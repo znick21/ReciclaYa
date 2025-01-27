@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Oferta de Reciclaje</title>
+    <title>Editar Oferta de Reciclaje</title>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDX8c0ulrUE5aUsefFR-EXM1NQlIAa8QyU&callback=initMap&libraries=&v=weekly" async></script>
 
     <script>
@@ -99,41 +99,46 @@
 
 <body>
     <div class="container">
-        <h1 class="text-center">Crear Oferta de Reciclaje</h1>
+        <h1 class="text-center">Editar Oferta de Reciclaje</h1>
 
         <div class="form-container">
-            <form action="{{ route('oferta.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf  <!-- Método POST para crear -->
+            <form action="{{ route('oferta.update', $oferta->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')  <!-- Para indicar que es un PUT -->
 
-                <input type="text" id="latitud" name="latitud" readonly hidden>
-                <input type="text" id="longitud" name="longitud" readonly hidden>
+                <input type="text" id="latitud" name="latitud" value="{{ old('latitud', $oferta->latitud) }}" readonly hidden>
+                <input type="text" id="longitud" name="longitud" value="{{ old('longitud', $oferta->longitud) }}" readonly hidden>
 
                 <label for="ubicacion">Ubicación Seleccionada:</label>
                 <select id="ubicacion" name="ubicacion" class="address-dropdown" disabled>
-                    <option value="">Seleccione una ubicación</option>
+                    <option value="{{ old('ubicacion', $oferta->ubicacion) }}">{{ old('ubicacion', $oferta->ubicacion) }}</option>
                 </select>
 
                 <label for="material">Material:</label>
                 <select id="material" name="material" required>
-                    <option value="papel">Papel</option>
-                    <option value="carton">Cartón</option>
-                    <option value="plastico">Plástico</option>
-                    <option value="vidrio">Vidrio</option>
-                    <option value="metales">Metales</option>
-                    <option value="orgánico">Orgánico</option>
-                    <option value="electrónico">Electrónico</option>
+                    <option value="papel" {{ old('material', $oferta->material) == 'papel' ? 'selected' : '' }}>Papel</option>
+                    <option value="carton" {{ old('material', $oferta->material) == 'carton' ? 'selected' : '' }}>Cartón</option>
+                    <option value="plastico" {{ old('material', $oferta->material) == 'plastico' ? 'selected' : '' }}>Plástico</option>
+                    <option value="vidrio" {{ old('material', $oferta->material) == 'vidrio' ? 'selected' : '' }}>Vidrio</option>
+                    <option value="metales" {{ old('material', $oferta->material) == 'metales' ? 'selected' : '' }}>Metales</option>
+                    <option value="orgánico" {{ old('material', $oferta->material) == 'orgánico' ? 'selected' : '' }}>Orgánico</option>
+                    <option value="electrónico" {{ old('material', $oferta->material) == 'electrónico' ? 'selected' : '' }}>Electrónico</option>
                 </select>
 
                 <label for="cantidad">Cantidad:</label>
-                <input type="number" id="cantidad" name="cantidad" required placeholder="Cantidad de producto en Kg">
+                <input type="number" id="cantidad" name="cantidad" required placeholder="Cantidad de producto en Kg" value="{{ old('cantidad', $oferta->cantidad) }}">
 
                 <label for="precio">Precio:</label>
-                <input type="number" id="precio" name="precio" required placeholder="Precio ofertado en Bs">
+                <input type="number" id="precio" name="precio" required placeholder="Precio ofertado en Bs" value="{{ old('precio', $oferta->precio) }}">
 
                 <label for="imagen">Imagen:</label>
                 <input type="file" id="imagen" name="imagen" accept="image/*">
+                <!-- Mostrar la imagen actual -->
+                @if($oferta->imagen)
+                    <img src="{{ asset('storage/' . $oferta->imagen) }}" alt="Imagen actual" style="max-width: 200px; margin-top: 10px;">
+                @endif
 
-                <button type="submit">Crear Oferta</button>
+                <button type="submit">Actualizar Oferta</button>
             </form>
         </div>
 

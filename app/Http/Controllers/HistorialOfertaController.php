@@ -7,7 +7,6 @@ use App\Models\HistorialOferta;
 use App\Models\Oferta;
 use Illuminate\Support\Facades\Auth;
 
-
 class HistorialOfertaController extends Controller
 {
     // Aceptar una oferta
@@ -38,5 +37,20 @@ class HistorialOfertaController extends Controller
         ]);
 
         return redirect()->route('mapa')->with('error', 'Oferta rechazada');
+    }
+
+    // Completar una oferta
+    public function completar($id)
+    {
+        $oferta = Oferta::findOrFail($id);
+
+        // Crear un historial de completado
+        HistorialOferta::create([
+            'oferta_id' => $oferta->id,
+            'recolector_id' => Auth::id(),
+            'estado' => 'completada',
+        ]);
+
+        return redirect()->route('mapa')->with('success', 'Oferta completada exitosamente');
     }
 }

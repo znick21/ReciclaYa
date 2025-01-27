@@ -9,17 +9,17 @@ use Illuminate\Support\Facades\Auth;
 class DashboardController extends Controller
 {
     public function index()
-    {
-        $user = Auth::user(); 
-    
-        if ($user->role == 'vendedor') {
-            return view('oferta.create');
-        } elseif ($user->role == 'recolector') {
-            // Obtener las ofertas disponibles para recolectores
-            $ofertas = Oferta::where('estado', 'disponible')->with('usuario')->paginate(10);
-            return view('oferta.index', compact('ofertas')); // Pasar las ofertas a la vista
-        } else {
-            return redirect()->route('home');
-        }
+{
+    $user = Auth::user(); 
+
+    if ($user->role == 'vendedor') {
+        return redirect()->route('oferta.create'); // Redirigir a la creación de ofertas
+    } elseif ($user->role == 'recolector') {
+        return redirect()->route('oferta.index'); // Redirigir a la lista de ofertas
+    } else {
+        return redirect()->route('home'); // Redirigir a la página de inicio
     }
+}
+
+    
 }
